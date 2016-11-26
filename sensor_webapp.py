@@ -3,6 +3,7 @@
 import webapp2
 import json
 import pymongo
+import sys, getopt
 
 class Error(Exception):
     """ Base class for exceptions in sensor module """
@@ -99,9 +100,22 @@ app = webapp2.WSGIApplication([
     (r"/", SensorRequestHandler)
 ], debug=True, config=config)
 
-def main():
+def main(argv):
+    found_host = False
+    try:
+        opts, args = getopt.getopt(argv,"",["host="])
+    except getopt.GetoptError:
+        print 'test.py --host <hostname>'
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '--host':
+            host = arg
+            found_host = True
+    if not found_host:
+        print 'test.py --host <hostname>'
+        sys.exit(2)
     from paste import httpserver
-    httpserver.serve(app, host='127.0.0.1', port='80')
+    httpserver.serve(app, host=host, port='80')
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
