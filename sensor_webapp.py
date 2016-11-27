@@ -91,29 +91,39 @@ class SensorDBController:
         self.temperatures = db.temperatures
         self.humidities = db.humiditites
 
-db = SensorDBController('mongodb://localhost:27017/')
-
-config = {
-    'db': db
-}
-app = webapp2.WSGIApplication([
-    (r"/", SensorRequestHandler)
-], debug=True, config=config)
-
 def main(argv):
     found_host = False
+    found_mongoconnection = False
     try:
-        opts, args = getopt.getopt(argv,"",["host="])
-    except getopt.GetoptError:
-        print 'test.py --host <hostname>'
+        opts, args = getopt.getopt(argv,"",["host=", "mongoconnection="])
+    except getopt.GetoptError as err:
+        print err
+        print 'test.py --host <hostname> --mongoconnection <mongoConnectionString>'
         sys.exit(2)
     for opt, arg in opts:
         if opt == '--host':
             host = arg
             found_host = True
+        if opt == '--mongoconnection':
+            mongoconnection = arg
+            found_mongoconnection = True
     if not found_host:
-        print 'test.py --host <hostname>'
+        print 'missing host argument'
+        print 'test.py --host <hostname> --mongoconnection <mongoConnectionString>'
         sys.exit(2)
+    if not found_mongoconnection:
+        print 'missing mongoconnection argument'
+        print 'test.py --host <hostname> --mongoconnection <mongoConnectionString>'
+        sys.exit(2)
+
+    db = SensorDBController(mongoconnection)
+    config = {
+        'db': db
+    }
+    app = webapp2.WSGIApplication([
+        (r"/", SensorRequestHandler)
+    ], debug=True, config=config)
+
     from paste import httpserver
     httpserver.serve(app, host=host, port='80')
 
