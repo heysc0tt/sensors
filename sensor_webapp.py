@@ -42,8 +42,9 @@ def main(argv):
     }
 
     app = webapp2.WSGIApplication([
-        webapp2.Route(r"/", handler='request_handlers.SensorRequestHandler', methods=['POST']),
-        webapp2.Route(r"/<type>", handler='request_handlers.SensorRequestHandler', methods=['GET'])
+        webapp2.Route(r"/api/sensors", handler='request_handlers.SensorAPIRequestHandler', methods=['POST']),
+        webapp2.Route(r"/api/sensors/<type>", handler='request_handlers.SensorAPIRequestHandler', methods=['GET']),
+        webapp2.Route(r"/sensors", handler='request_handlers.SensorIndexRequestHandler', methods=['GET'])
     ], debug=True, config=config)
 
     from paste import httpserver

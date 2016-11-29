@@ -16,7 +16,11 @@ class InputError(Error):
     def __init__(self, message):
         self.message = message
 
-class SensorRequestHandler(webapp2.RequestHandler):
+class SensorIndexRequestHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write("<html><body><h1>hello</h1></body></html>")
+
+class SensorAPIRequestHandler(webapp2.RequestHandler):
     def validate_post_request(self, body):
         print('in validate_post_request')
         body_obj = json.loads(body)
