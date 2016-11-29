@@ -41,9 +41,9 @@ def main(argv):
         'db': db
     }
 
-    from request_handlers import SensorRequestHandler
     app = webapp2.WSGIApplication([
-        (r"/", SensorRequestHandler)
+        webapp2.Route(r"/", handler='request_handlers.SensorRequestHandler', methods=['POST']),
+        webapp2.Route(r"/<type>", handler='request_handlers.SensorRequestHandler', methods=['GET'])
     ], debug=True, config=config)
 
     from paste import httpserver

@@ -11,6 +11,12 @@ class SensorDBController:
             print 'inserting humidity'
             return self.humidities.insert_one(obj).inserted_id
 
+    def retrieve(self, sensor_type, count, start):
+        if sensor_type == 'temperature':
+            return self.temperatures.find().skip(start).limit(count)
+        elif sensor_type == 'humidity':
+            return self.humidities.find().skip(start).limit(count)
+
     def __init__(self, connString):
         from pymongo import MongoClient
         client = MongoClient(connString)
