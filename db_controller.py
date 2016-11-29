@@ -13,9 +13,10 @@ class SensorDBController:
 
     def retrieve(self, sensor_type, count, start):
         if sensor_type == 'temperature':
-            return self.temperatures.find().skip(start).limit(count)
+            collection = self.temperatures
         elif sensor_type == 'humidity':
-            return self.humidities.find().skip(start).limit(count)
+            collection = self.humidities
+        return collection.find().sort("date", pymongo.DESCENDING).skip(start).limit(count)
 
     def __init__(self, connString):
         from pymongo import MongoClient
